@@ -192,8 +192,9 @@ export default class IpAcademy {
    * @param {Principal} instructor - The Principal of the instructor.
    * @returns {Course[]} - A list of courses created by the instructor.
    */
-  @query([IDL.Principal], IDL.Vec(Course))
-  getCoursesCreatedByUser(instructor: Principal): Course[] {
+  @query([], IDL.Vec(Course))
+  getCoursesCreatedByUser(): Course[] {
+    const instructor = msgCaller()
     return this.courses.filter((course) => course.instructor.toText() === instructor.toText());
   }
 
@@ -202,8 +203,9 @@ export default class IpAcademy {
    * @param {Principal} student - The Principal of the student.
    * @returns {Course[]} - A list of courses enrolled by the student.
    */
-  @query([IDL.Principal], IDL.Vec(Course))
-  getCoursesEnrolledByUser(student: Principal): Course[] {
+  @query([], IDL.Vec(Course))
+  getCoursesEnrolledByUser(): Course[] {
+    const student = msgCaller()
     return this.courses.filter((course) => course.students.includes(student));
   }
 }
