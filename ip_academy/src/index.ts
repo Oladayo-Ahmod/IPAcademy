@@ -198,61 +198,15 @@ export default class IpAcademy {
   }
 
 
-        /**
-         * Enrolls the current user in a course.
-         * @param {number} id - The ID of the course.
-         * @returns {Result<string, Message>} - A success message or an error message.
-         */
-        enrollCourse: update([IDL.Nat], Result(IDL.Text, Message), (id) => {
-            const currentUser = ic.caller();
-            const courseOpt = coursesStorage.get(id);
-            if ("None" in courseOpt) {
-                return Err({ NotFound: `Course with ID ${id} not found` });
-            }
-            const course = courseOpt.Some;
-            if (course.students.includes(currentUser)) {
-                return Err({ InvalidPayload: `User is already enrolled in course ${id}` });
-            }
-            course.students.push(currentUser);
-            coursesStorage.insert(id, course);
-            return Ok(`Enrolled in course ${id}`);
-        }),
-
-            /**
-             * Purchases a course for the current user.
-             * @param {number} id - The ID of the course.
-             * @returns {Result<string, Message>} - A success message or an error message.
-             */
-            buyCourse: update([IDL.Nat], Result(IDL.Text, Message), async (id) => {
-                const courseOpt = coursesStorage.get(id);
-                if ("None" in courseOpt) {
-                    return Err({ NotFound: `Course with ID ${id} not found` });
-                }
-                const course = courseOpt.Some;
-                const currentUser = ic.caller();
-
-                // Check if the user has already purchased the course
-                const userOpt = usersStorage.get(currentUser);
-                if ("None" in userOpt) {
-                    return Err({ InvalidPayload: `User not found` });
-                }
-                const user = userOpt.Some;
-                if (user.purchasedCourses.includes(id.toString())) {
-                    return Err({ InvalidPayload: `User has already purchased the course ${id}` });
-                }
-
-                // Perform the payment transaction
-                const paymentMemo = uuidv4();
-                const paymentAmount = course.price;
-                const paymentTransaction = await makePaymentInternal(currentUser, course.instructor, paymentAmount, paymentMemo);
-                if (paymentTransaction.status !== "Completed") {
-                    return Err({ PaymentFailed: `Payment for course ${id} failed` });
-                }
-
-                // Add the course to the user's purchased courses
-                user.purchasedCourses.push(id.toString());
-                usersStorage.insert(currentUser, user);
-
-                return Ok(`Course ${id} purchased successfully`);
-            }),
+    // Enroll a student in a course
+  @update([IDL.Nat, IDL.Principal], IDL.Bool)
+  enrollStudent(courseId: number, student: Principal): boolean {
+    const course = this.courses.find((c) => c.id === courseId);
+    if (course) {
+      course.students.push(student); // Enroll the student
+      return true;
+    }
+    return false;
   }
+
+}
