@@ -2,9 +2,10 @@ import {
     IDL,
     query,
     update,
-    StableBTreeMap,
+    caller,
     Principal,
 } from "azle";
+import { ic } from "azle/experimental";
 //   import { Ledger, binaryAddressFromPrincipal, hexAddressFromPrincipal } from "azle/canisters/ledger";
 import { v4 as uuidv4 } from "uuid";
 
@@ -208,5 +209,41 @@ export default class IpAcademy {
     }
     return false;
   }
+
+   // Mark a course as completed by a student
+   @update([IDL.Nat, IDL.Principal], IDL.Bool)
+   completeCourse(courseId: number, student: Principal): boolean {
+     const course = this.courses.find((c) => c.id === courseId);
+     if (course) {
+       // Remove the student from the enrolled list (simulating completion)
+       const index = course.students.indexOf(student);
+       if (index !== -1) {
+         course.students.splice(index, 1);
+         return true;
+       }
+     }
+     return false;
+   }
+
+    // register student
+   @update([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], IDL.Bool)
+   registerStudent(username: string, bio: string, skills: string[]): boolean {
+     const currentCaller = caller(); // Get the caller's principal
+     const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
+     if (existingUser) {
+       return false; // User already registered
+     }
+ 
+     const newUser: User = {
+       id: currentCaller,
+       username,
+       bio,
+       skills,
+       enrolledCourses: [], // Initially no enrolled courses
+       purchasedCourses: [], // Initially no purchased courses
+     };
+     this.users.push(newUser);
+     return true;
+   }
 
 }
