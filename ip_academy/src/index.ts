@@ -40,7 +40,7 @@ type Course = {
     id: number; // IDL.Nat
     title: string; // IDL.Text
     description: string; // IDL.Text
-    instructor: Principal | null; // IDL.Opt(IDL.Principal)
+    instructor: typeof IDL.Principal.name | null; // IDL.Opt(IDL.Principal)
     duration: bigint; // IDL.Nat64
     skillLevel: string; // IDL.Text
     prerequisites: string[]; // IDL.Vec(IDL.Text)
@@ -135,7 +135,12 @@ type Message =
   | { PaymentCompleted: string }; // IDL.Variant({ PaymentCompleted: IDL.Text })
 
 export default class IpAcademy {
-    private courses : Course[] = []
+    private courses: Course[] = [];
+    private users: User[] = [];
+    private transactions: Transaction[] = [];
+    private nextCourseId: number = 0;
+
+
     /**
      * Retrieves a list of all available courses.
      * @returns {Course[]} - A list of all courses.
@@ -145,18 +150,12 @@ export default class IpAcademy {
         return this.courses
     }
 
-/**
- * Retrieves details of a specific course by its ID.
- * @param {number} id - The ID of the course.
- * @returns {Result<Course, Message>} - The course details or an error message.
- */
-getCourse: query([IDL.Nat], Result(Course, Message), (id) => {
-    const courseOpt = coursesStorage.get(id);
-    if ("None" in courseOpt) {
-        return Err({ NotFound: `Course with ID ${id} not found` });
-    }
-    return Ok(courseOpt.Some);
-}),
+  // Get a course by its ID
+  @query([IDL.Nat], IDL.Opt(Course))
+  getCourseById(courseId: number): [] | [Course] {
+    const course = this.courses.find((c) => c.id === courseId);
+    return course ? [course] : []; // Return as an optional value
+  }
 
     /**
      * Adds a new course to the platform.
@@ -170,30 +169,34 @@ getCourse: query([IDL.Nat], Result(Course, Message), (id) => {
      * @param {nat64} payload.price - The price of the course.
      * @returns {Result<number, Message>} - The ID of the newly created course or an error message.
      */
-    addCourse: update(
-        [
-            IDL.Record({
-                title: IDL.Text,
-                description: IDL.Text,
-                instructor: IDL.Opt(IDL.Principal),
-                duration: IDL.Nat64,
-                skillLevel: IDL.Text,
-                prerequisites: IDL.Vec(IDL.Text),
-                price: IDL.Nat64,
-            }),
-        ],
-        Result(IDL.Nat, Message),
-        (payload) => {
-            const courseId = Number(uuidv4()); // Generate a unique ID for the course
-            const course = {
-                id: courseId,
-                students: [],
-                ...payload,
-            };
-            coursesStorage.insert(courseId, course);
-            return Ok(courseId);
-        }
-    ),
+
+     // Create a new course
+  @update([IDL.Text, IDL.Text, IDL.Principal, IDL.Nat64, IDL.Text, IDL.Vec(IDL.Text), IDL.Nat64], IDL.Nat)
+  createCourse(
+    title: string,
+    description: string,
+    instructor: typeof IDL.Principal.name,
+    duration: bigint,
+    skillLevel: string,
+    prerequisites: string[],
+    price: bigint
+  ): number {
+    const courseId = this.nextCourseId++;
+    const newCourse: Course = {
+      id: courseId,
+      title,
+      description,
+      instructor,
+      duration,
+      skillLevel,
+      prerequisites,
+      price,
+      students: [], // Initially no students
+    };
+    this.courses.push(newCourse);
+    return courseId;
+  }
+
 
         /**
          * Enrolls the current user in a course.
