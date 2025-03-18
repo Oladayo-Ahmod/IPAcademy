@@ -5604,11 +5604,19 @@ var IpAcademy = class {
   registerStudent(username, bio, skills) {
     const currentCaller = msgCaller();
     const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
-    if (existingUser) {
-      return false;
-    } else {
-      return true;
-    }
+    if (existingUser) return false;
+    const newUser = {
+      id: currentCaller,
+      username,
+      bio,
+      skills,
+      enrolledCourses: [],
+      // Initially no enrolled courses
+      purchasedCourses: []
+      // Initially no purchased courses
+    };
+    this.users.push(newUser);
+    return true;
   }
 };
 _init = __decoratorStart(null);

@@ -230,12 +230,7 @@ export default class IpAcademy {
    registerStudent(username: string, bio: string, skills: string[]): boolean {
      const currentCaller = msgCaller(); // Get the caller's principal
      const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
-     if (existingUser) {
-       return false; // User already registered
-     }
-     else{
-      return true
-     }
+     if (existingUser) return false
  
      const newUser: User = {
        id: currentCaller,
