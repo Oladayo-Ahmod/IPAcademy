@@ -5507,7 +5507,7 @@ var Course = idl_exports.Record({
   id: idl_exports.Nat,
   title: idl_exports.Text,
   description: idl_exports.Text,
-  instructor: idl_exports.Opt(idl_exports.Principal),
+  // instructor: IDL.Opt(IDL.Principal),
   duration: idl_exports.Nat64,
   skillLevel: idl_exports.Text,
   prerequisites: idl_exports.Vec(idl_exports.Text),
@@ -5537,13 +5537,12 @@ var Message = idl_exports.Variant({
   PaymentCompleted: idl_exports.Text
 });
 var _registerStudent_dec, _completeCourse_dec, _enrollStudent_dec, _createCourse_dec, _getCourseById_dec, _getCourses_dec, _init;
-_getCourses_dec = [query([], idl_exports.Vec(Course))], _getCourseById_dec = [query([idl_exports.Nat], idl_exports.Opt(Course))], _createCourse_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Principal, idl_exports.Nat64, idl_exports.Text, idl_exports.Vec(idl_exports.Text), idl_exports.Nat64], idl_exports.Nat)], _enrollStudent_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _completeCourse_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _registerStudent_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Vec(idl_exports.Text)], idl_exports.Bool)];
+_getCourses_dec = [query([], idl_exports.Vec(Course))], _getCourseById_dec = [query([idl_exports.Nat], idl_exports.Opt(Course))], _createCourse_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Nat64, idl_exports.Text, idl_exports.Vec(idl_exports.Text), idl_exports.Nat64], idl_exports.Nat)], _enrollStudent_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _completeCourse_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _registerStudent_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Vec(idl_exports.Text)], idl_exports.Bool)];
 var IpAcademy = class {
   constructor() {
     __runInitializers(_init, 5, this);
     __publicField(this, "courses", []);
     __publicField(this, "users", []);
-    __publicField(this, "transactions", []);
     __publicField(this, "nextCourseId", 0);
   }
   getCourses() {
@@ -5553,13 +5552,13 @@ var IpAcademy = class {
     const course = this.courses.find((c) => c.id === courseId);
     return course ? [course] : [];
   }
-  createCourse(title, description, instructor, duration, skillLevel, prerequisites, price) {
+  createCourse(title, description, duration, skillLevel, prerequisites, price) {
     const courseId = this.nextCourseId++;
     const newCourse = {
       id: courseId,
       title,
       description,
-      instructor,
+      // instructor,
       duration,
       skillLevel,
       prerequisites,

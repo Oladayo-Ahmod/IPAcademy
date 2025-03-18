@@ -26,7 +26,7 @@ const Course = IDL.Record({
     id: IDL.Nat,
     title: IDL.Text,
     description: IDL.Text,
-    instructor: IDL.Opt(IDL.Principal),
+    // instructor: IDL.Opt(IDL.Principal),
     duration: IDL.Nat64,
     skillLevel: IDL.Text,
     prerequisites: IDL.Vec(IDL.Text),
@@ -41,7 +41,7 @@ type Course = {
     id: number; // IDL.Nat
     title: string; // IDL.Text
     description: string; // IDL.Text
-    instructor: typeof IDL.Principal.name | null; // IDL.Opt(IDL.Principal)
+    // instructor: Principal | null; // IDL.Opt(IDL.Principal)
     duration: bigint; // IDL.Nat64
     skillLevel: string; // IDL.Text
     prerequisites: string[]; // IDL.Vec(IDL.Text)
@@ -138,7 +138,6 @@ type Message =
 export default class IpAcademy {
     private courses: Course[] = [];
     private users: User[] = [];
-    private transactions: Transaction[] = [];
     private nextCourseId: number = 0;
 
 
@@ -172,11 +171,11 @@ export default class IpAcademy {
      */
 
      // Create a new course
-  @update([IDL.Text, IDL.Text, IDL.Principal, IDL.Nat64, IDL.Text, IDL.Vec(IDL.Text), IDL.Nat64], IDL.Nat)
+  @update([IDL.Text, IDL.Text, IDL.Nat64, IDL.Text, IDL.Vec(IDL.Text), IDL.Nat64], IDL.Nat)
   createCourse(
     title: string,
     description: string,
-    instructor: typeof IDL.Principal.name,
+    // instructor: Principal,
     duration: bigint,
     skillLevel: string,
     prerequisites: string[],
@@ -187,7 +186,7 @@ export default class IpAcademy {
       id: courseId,
       title,
       description,
-      instructor,
+      // instructor,
       duration,
       skillLevel,
       prerequisites,

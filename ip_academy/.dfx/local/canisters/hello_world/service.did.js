@@ -2,15 +2,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'completeCourse' : IDL.Func([IDL.Nat, IDL.Principal], [IDL.Bool], []),
     'createCourse' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Principal,
-          IDL.Nat64,
-          IDL.Text,
-          IDL.Vec(IDL.Text),
-          IDL.Nat64,
-        ],
+        [IDL.Text, IDL.Text, IDL.Nat64, IDL.Text, IDL.Vec(IDL.Text), IDL.Nat64],
         [IDL.Nat],
         [],
       ),
@@ -25,7 +17,6 @@ export const idlFactory = ({ IDL }) => {
               'duration' : IDL.Nat64,
               'students' : IDL.Vec(IDL.Principal),
               'prerequisites' : IDL.Vec(IDL.Text),
-              'instructor' : IDL.Opt(IDL.Principal),
               'description' : IDL.Text,
               'skillLevel' : IDL.Text,
               'price' : IDL.Nat64,
@@ -44,7 +35,6 @@ export const idlFactory = ({ IDL }) => {
               'duration' : IDL.Nat64,
               'students' : IDL.Vec(IDL.Principal),
               'prerequisites' : IDL.Vec(IDL.Text),
-              'instructor' : IDL.Opt(IDL.Principal),
               'description' : IDL.Text,
               'skillLevel' : IDL.Text,
               'price' : IDL.Nat64,
