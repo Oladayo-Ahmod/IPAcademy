@@ -27,7 +27,7 @@ const Course = IDL.Record({
     id: IDL.Nat,
     title: IDL.Text,
     description: IDL.Text,
-    // instructor: IDL.Opt(IDL.Principal),
+    instructor: IDL.Principal,
     duration: IDL.Nat64,
     skillLevel: IDL.Text,
     prerequisites: IDL.Vec(IDL.Text),
@@ -42,7 +42,7 @@ type Course = {
     id: number; // IDL.Nat
     title: string; // IDL.Text
     description: string; // IDL.Text
-    // instructor: Principal | null; // IDL.Opt(IDL.Principal)
+    instructor: Principal
     duration: bigint; // IDL.Nat64
     skillLevel: string; // IDL.Text
     prerequisites: string[]; // IDL.Vec(IDL.Text)
@@ -153,9 +153,9 @@ export default class IpAcademy {
 
   // Get a course by its ID
   @query([IDL.Nat], IDL.Opt(Course))
-  getCourseById(courseId: number):Course | null {
-    const course = this.courses.find((c) => c.id === courseId);
-    return course ?? null; // Return as an optional value
+  getCourseById(courseId: number):[Course] | [] {
+    const course = this.courses.find((c) => c.id.toString() == courseId.toString());
+    return course? [course] : []; // Return as an optional value
   }
 
     /**
@@ -176,18 +176,18 @@ export default class IpAcademy {
   createCourse(
     title: string,
     description: string,
-    // instructor: Principal,
     duration: bigint,
     skillLevel: string,
     prerequisites: string[],
     price: bigint
   ): number {
     const courseId = this.nextCourseId++;
+    const instructor = msgCaller()
     const newCourse: Course = {
       id: courseId,
       title,
       description,
-      // instructor,
+      instructor,
       duration,
       skillLevel,
       prerequisites,
@@ -200,9 +200,10 @@ export default class IpAcademy {
 
 
     // Enroll a student in a course
-  @update([IDL.Nat, IDL.Principal], IDL.Bool)
-  enrollStudent(courseId: number, student: Principal): boolean {
+  @update([IDL.Nat], IDL.Bool)
+  enrollStudent(courseId: number): boolean {
     const course = this.courses.find((c) => c.id === courseId);
+    const student = msgCaller()
     if (course) {
       course.students.push(student); // Enroll the student
       return true;
@@ -211,9 +212,10 @@ export default class IpAcademy {
   }
 
    // Mark a course as completed by a student
-   @update([IDL.Nat, IDL.Principal], IDL.Bool)
-   completeCourse(courseId: number, student: Principal): boolean {
+   @update([IDL.Nat], IDL.Bool)
+   completeCourse(courseId: number): boolean {
      const course = this.courses.find((c) => c.id === courseId);
+     const student = msgCaller()
      if (course) {
        // Remove the student from the enrolled list (simulating completion)
        const index = course.students.indexOf(student);
