@@ -2,7 +2,7 @@ import {
     IDL,
     query,
     update,
-    caller,
+    call,
     Principal,
 } from "azle";
 import { ic } from "azle/experimental";
@@ -228,7 +228,7 @@ export default class IpAcademy {
     // register student
    @update([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], IDL.Bool)
    registerStudent(username: string, bio: string, skills: string[]): boolean {
-     const currentCaller = caller(); // Get the caller's principal
+     const currentCaller = Principal.caller(); // Get the caller's principal
      const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
      if (existingUser) {
        return false; // User already registered

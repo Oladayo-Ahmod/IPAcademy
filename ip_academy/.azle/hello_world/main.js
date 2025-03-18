@@ -5503,24 +5503,120 @@ function update(param1, param2, param3) {
 }
 
 // src/index.ts
-var _setMessage_dec, _getMessage_dec, _init;
-_getMessage_dec = [query([], idl_exports.Text)], _setMessage_dec = [update([idl_exports.Text])];
-var src_default = class {
+var Course = idl_exports.Record({
+  id: idl_exports.Nat,
+  title: idl_exports.Text,
+  description: idl_exports.Text,
+  instructor: idl_exports.Opt(idl_exports.Principal),
+  duration: idl_exports.Nat64,
+  skillLevel: idl_exports.Text,
+  prerequisites: idl_exports.Vec(idl_exports.Text),
+  price: idl_exports.Nat64,
+  students: idl_exports.Vec(idl_exports.Principal)
+});
+var User = idl_exports.Record({
+  id: idl_exports.Principal,
+  username: idl_exports.Text,
+  bio: idl_exports.Text,
+  skills: idl_exports.Vec(idl_exports.Text),
+  enrolledCourses: idl_exports.Vec(idl_exports.Principal),
+  purchasedCourses: idl_exports.Vec(idl_exports.Text)
+});
+var Transaction = idl_exports.Record({
+  id: idl_exports.Text,
+  from: idl_exports.Principal,
+  to: idl_exports.Principal,
+  amount: idl_exports.Nat64,
+  memo: idl_exports.Text,
+  status: idl_exports.Text
+});
+var Message = idl_exports.Variant({
+  NotFound: idl_exports.Text,
+  InvalidPayload: idl_exports.Text,
+  PaymentFailed: idl_exports.Text,
+  PaymentCompleted: idl_exports.Text
+});
+var _registerStudent_dec, _completeCourse_dec, _enrollStudent_dec, _createCourse_dec, _getCourseById_dec, _getCourses_dec, _init;
+_getCourses_dec = [query([], idl_exports.Vec(Course))], _getCourseById_dec = [query([idl_exports.Nat], idl_exports.Opt(Course))], _createCourse_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Principal, idl_exports.Nat64, idl_exports.Text, idl_exports.Vec(idl_exports.Text), idl_exports.Nat64], idl_exports.Nat)], _enrollStudent_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _completeCourse_dec = [update([idl_exports.Nat, idl_exports.Principal], idl_exports.Bool)], _registerStudent_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Vec(idl_exports.Text)], idl_exports.Bool)];
+var IpAcademy = class {
   constructor() {
     __runInitializers(_init, 5, this);
-    __publicField(this, "message", "Hello world!");
+    __publicField(this, "courses", []);
+    __publicField(this, "users", []);
+    __publicField(this, "transactions", []);
+    __publicField(this, "nextCourseId", 0);
   }
-  getMessage() {
-    return this.message;
+  getCourses() {
+    return this.courses;
   }
-  setMessage(message) {
-    this.message = message;
+  getCourseById(courseId) {
+    const course = this.courses.find((c) => c.id === courseId);
+    return course ? [course] : [];
+  }
+  createCourse(title, description, instructor, duration, skillLevel, prerequisites, price) {
+    const courseId = this.nextCourseId++;
+    const newCourse = {
+      id: courseId,
+      title,
+      description,
+      instructor,
+      duration,
+      skillLevel,
+      prerequisites,
+      price,
+      students: []
+      // Initially no students
+    };
+    this.courses.push(newCourse);
+    return courseId;
+  }
+  enrollStudent(courseId, student) {
+    const course = this.courses.find((c) => c.id === courseId);
+    if (course) {
+      course.students.push(student);
+      return true;
+    }
+    return false;
+  }
+  completeCourse(courseId, student) {
+    const course = this.courses.find((c) => c.id === courseId);
+    if (course) {
+      const index = course.students.indexOf(student);
+      if (index !== -1) {
+        course.students.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  }
+  registerStudent(username, bio, skills) {
+    const currentCaller = Principal.caller();
+    const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
+    if (existingUser) {
+      return false;
+    }
+    const newUser = {
+      id: currentCaller,
+      username,
+      bio,
+      skills,
+      enrolledCourses: [],
+      // Initially no enrolled courses
+      purchasedCourses: []
+      // Initially no purchased courses
+    };
+    this.users.push(newUser);
+    return true;
   }
 };
 _init = __decoratorStart(null);
-__decorateElement(_init, 1, "getMessage", _getMessage_dec, src_default);
-__decorateElement(_init, 1, "setMessage", _setMessage_dec, src_default);
-__decoratorMetadata(_init, src_default);
+__decorateElement(_init, 1, "getCourses", _getCourses_dec, IpAcademy);
+__decorateElement(_init, 1, "getCourseById", _getCourseById_dec, IpAcademy);
+__decorateElement(_init, 1, "createCourse", _createCourse_dec, IpAcademy);
+__decorateElement(_init, 1, "enrollStudent", _enrollStudent_dec, IpAcademy);
+__decorateElement(_init, 1, "completeCourse", _completeCourse_dec, IpAcademy);
+__decorateElement(_init, 1, "registerStudent", _registerStudent_dec, IpAcademy);
+__decoratorMetadata(_init, IpAcademy);
 
 // <stdin>
 var exportedCanisterClassInstance = getExportedCanisterClassInstance();
@@ -5547,12 +5643,12 @@ function isMethodVisible(methodName, methodMeta) {
 }
 function getExportedCanisterClassInstance() {
   try {
-    if (src_default === void 0) {
+    if (IpAcademy === void 0) {
       throw new Error("Your canister class must be the default export of src/index.ts");
     }
-    src_default.prototype._azleShouldRegisterCanisterMethods = true;
-    new src_default();
-    src_default.prototype._azleShouldRegisterCanisterMethods = false;
+    IpAcademy.prototype._azleShouldRegisterCanisterMethods = true;
+    new IpAcademy();
+    IpAcademy.prototype._azleShouldRegisterCanisterMethods = false;
   } catch (error) {
     if (globalThis._azleNodeWasmEnvironment === true) {
       if (globalThis._azleExportedCanisterClassInstance === void 0) {
