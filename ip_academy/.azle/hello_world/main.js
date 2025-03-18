@@ -5548,7 +5548,7 @@ var IpAcademy = class {
     return this.courses;
   }
   getCourseById(courseId) {
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     return course ? [course] : [];
   }
   createCourse(title, description, duration, skillLevel, prerequisites, price) {
@@ -5570,29 +5570,33 @@ var IpAcademy = class {
     return courseId;
   }
   enrollStudent(courseId) {
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller();
+    const isRegistered = this.users.find((c) => c.id.toText() === student.toText());
+    if (!isRegistered) {
+      return "you are not a registered student";
+    }
     if (!course) {
-      return false;
+      return "course not found";
     }
     if (course.instructor.toText() === student.toText()) {
-      return false;
+      return "instructor cannot enroll in their own course";
     }
     if (course.students.includes(student)) {
-      return false;
+      return "Student already enrolled";
     }
     course.students.push(student);
     return true;
   }
   completeCourse(courseId) {
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller();
     if (!course) {
-      return false;
+      return "course not found";
     }
     const index = course.students.indexOf(student);
     if (index === -1) {
-      return false;
+      return "student not found";
     }
     course.students.splice(index, 1);
     return true;
@@ -5601,7 +5605,7 @@ var IpAcademy = class {
     const currentCaller = msgCaller();
     const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
     if (existingUser) {
-      return false;
+      return "already registered";
     }
     const newUser = {
       id: currentCaller,

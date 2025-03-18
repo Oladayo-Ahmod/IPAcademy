@@ -114,8 +114,13 @@ export default class IpAcademy {
    */
   @update([IDL.Nat], IDL.Bool)
   enrollStudent(courseId: number): string | boolean {
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller(); // Get the caller's principal
+    const isRegistered = this.users.find((c)=> c.id.toText() === student.toText() )
+    
+    if(!isRegistered){
+      return 'you are not a registered student'
+    }
 
     if (!course) {
       return 'course not found'; // Course not found
@@ -143,8 +148,13 @@ export default class IpAcademy {
    */
   @update([IDL.Nat], IDL.Bool)
   completeCourse(courseId: number): boolean | string{
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller(); // Get the caller's principal
+    const isRegistered = this.users.find((c)=> c.id.toText() === student.toText() )
+    
+    if(!isRegistered){
+      return 'you are not a registered student'
+    }
 
     if (!course) {
       return 'course not found'; // Course not found
