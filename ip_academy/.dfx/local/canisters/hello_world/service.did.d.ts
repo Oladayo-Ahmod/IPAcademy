@@ -3,12 +3,12 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface _SERVICE {
-  'completeCourse' : ActorMethod<[bigint, Principal], boolean>,
+  'completeCourse' : ActorMethod<[bigint], boolean>,
   'createCourse' : ActorMethod<
     [string, string, bigint, string, Array<string>, bigint],
     bigint
   >,
-  'enrollStudent' : ActorMethod<[bigint, Principal], boolean>,
+  'enrollStudent' : ActorMethod<[bigint], boolean>,
   'getCourseById' : ActorMethod<
     [bigint],
     [] | [
@@ -18,6 +18,7 @@ export interface _SERVICE {
         'duration' : bigint,
         'students' : Array<Principal>,
         'prerequisites' : Array<string>,
+        'instructor' : Principal,
         'description' : string,
         'skillLevel' : string,
         'price' : bigint,
@@ -33,6 +34,7 @@ export interface _SERVICE {
         'duration' : bigint,
         'students' : Array<Principal>,
         'prerequisites' : Array<string>,
+        'instructor' : Principal,
         'description' : string,
         'skillLevel' : string,
         'price' : bigint,
