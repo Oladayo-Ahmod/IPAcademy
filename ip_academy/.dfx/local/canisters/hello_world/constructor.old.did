@@ -1,7 +1,7 @@
 service : {
-  completeCourse : (nat, principal) -> (bool);
+  completeCourse : (nat) -> (bool);
   createCourse : (text, text, nat64, text, vec text, nat64) -> (nat);
-  enrollStudent : (nat, principal) -> (bool);
+  enrollStudent : (nat) -> (bool);
   getCourseById : (nat) -> (
       opt record {
         id : nat;
@@ -9,6 +9,7 @@ service : {
         duration : nat64;
         students : vec principal;
         prerequisites : vec text;
+        instructor : principal;
         description : text;
         skillLevel : text;
         price : nat64;
@@ -21,6 +22,7 @@ service : {
         duration : nat64;
         students : vec principal;
         prerequisites : vec text;
+        instructor : principal;
         description : text;
         skillLevel : text;
         price : nat64;

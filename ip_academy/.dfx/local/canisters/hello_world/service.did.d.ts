@@ -41,6 +41,38 @@ export interface _SERVICE {
       }
     >
   >,
+  'getCoursesCreatedByUser' : ActorMethod<
+    [],
+    Array<
+      {
+        'id' : bigint,
+        'title' : string,
+        'duration' : bigint,
+        'students' : Array<Principal>,
+        'prerequisites' : Array<string>,
+        'instructor' : Principal,
+        'description' : string,
+        'skillLevel' : string,
+        'price' : bigint,
+      }
+    >
+  >,
+  'getCoursesEnrolledByUser' : ActorMethod<
+    [],
+    Array<
+      {
+        'id' : bigint,
+        'title' : string,
+        'duration' : bigint,
+        'students' : Array<Principal>,
+        'prerequisites' : Array<string>,
+        'instructor' : Principal,
+        'description' : string,
+        'skillLevel' : string,
+        'price' : bigint,
+      }
+    >
+  >,
   'registerStudent' : ActorMethod<[string, string, Array<string>], boolean>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

@@ -74,7 +74,7 @@ export default class IpAcademy {
    */
   @query([IDL.Nat], IDL.Opt(Course))
   getCourseById(courseId: number): [Course] | [] {
-    const course = this.courses.find((c) => c.id === courseId);
+    const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     return course ? [course] : []; // Return as an optional value
   }
 
@@ -113,22 +113,22 @@ export default class IpAcademy {
    * @returns {boolean} - True if the student was enrolled successfully, false otherwise.
    */
   @update([IDL.Nat], IDL.Bool)
-  enrollStudent(courseId: number): boolean {
+  enrollStudent(courseId: number): string | boolean {
     const course = this.courses.find((c) => c.id === courseId);
     const student = msgCaller(); // Get the caller's principal
 
     if (!course) {
-      return false; // Course not found
+      return 'course not found'; // Course not found
     }
 
     // Ensure the instructor cannot enroll in their own course
     if (course.instructor.toText() === student.toText()) {
-      return false; // Instructor cannot enroll in their own course
+      return 'instructor cannot enroll in their own course'; // Instructor cannot enroll in their own course
     }
 
     // Check if the student is already enrolled
     if (course.students.includes(student)) {
-      return false; // Student already enrolled
+      return 'Student already enrolled'; // Student already enrolled
     }
 
     // Enroll the student
@@ -142,18 +142,18 @@ export default class IpAcademy {
    * @returns {boolean} - True if the course was marked as completed, false otherwise.
    */
   @update([IDL.Nat], IDL.Bool)
-  completeCourse(courseId: number): boolean {
+  completeCourse(courseId: number): boolean | string{
     const course = this.courses.find((c) => c.id === courseId);
     const student = msgCaller(); // Get the caller's principal
 
     if (!course) {
-      return false; // Course not found
+      return 'course not found'; // Course not found
     }
 
     // Remove the student from the enrolled list (simulating completion)
     const index = course.students.indexOf(student);
     if (index === -1) {
-      return false; // Student not enrolled in the course
+      return 'student not found'; // Student not enrolled in the course
     }
 
     course.students.splice(index, 1);
@@ -168,11 +168,11 @@ export default class IpAcademy {
    * @returns {boolean} - True if the student was registered successfully, false otherwise.
    */
   @update([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], IDL.Bool)
-  registerStudent(username: string, bio: string, skills: string[]): boolean {
+  registerStudent(username: string, bio: string, skills: string[]): boolean | string {
     const currentCaller = msgCaller(); // Get the caller's principal
     const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
     if (existingUser) {
-      return false; // User already registered
+      return 'already registered'; // User already registered
     }
 
     const newUser: User = {

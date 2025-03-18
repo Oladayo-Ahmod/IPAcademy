@@ -28,5 +28,31 @@ service : () -> {
         price : nat64;
       },
     ) query;
+  getCoursesCreatedByUser : () -> (
+      vec record {
+        id : nat;
+        title : text;
+        duration : nat64;
+        students : vec principal;
+        prerequisites : vec text;
+        instructor : principal;
+        description : text;
+        skillLevel : text;
+        price : nat64;
+      },
+    ) query;
+  getCoursesEnrolledByUser : () -> (
+      vec record {
+        id : nat;
+        title : text;
+        duration : nat64;
+        students : vec principal;
+        prerequisites : vec text;
+        instructor : principal;
+        description : text;
+        skillLevel : text;
+        price : nat64;
+      },
+    ) query;
   registerStudent : (text, text, vec text) -> (bool);
 }
