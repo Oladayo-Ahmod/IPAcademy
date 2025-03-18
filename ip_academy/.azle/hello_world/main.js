@@ -5502,6 +5502,19 @@ function update(param1, param2, param3) {
   return decoratorArgumentsHandler("update", param1, param2, param3);
 }
 
+// node_modules/azle/src/stable/lib/ic_apis/msg_caller.ts
+function msgCaller() {
+  if (globalThis._azleIcExperimental !== void 0) {
+    return Principal.fromUint8Array(
+      new Uint8Array(globalThis._azleIcExperimental.msgCaller())
+    );
+  }
+  if (globalThis._azleIcStable !== void 0) {
+    return Principal.fromUint8Array(globalThis._azleIcStable.msgCaller());
+  }
+  return Principal.fromHex("04");
+}
+
 // src/index.ts
 var Course = idl_exports.Record({
   id: idl_exports.Nat,
@@ -5550,7 +5563,7 @@ var IpAcademy = class {
   }
   getCourseById(courseId) {
     const course = this.courses.find((c) => c.id === courseId);
-    return course ? [course] : [];
+    return course ?? null;
   }
   createCourse(title, description, duration, skillLevel, prerequisites, price) {
     const courseId = this.nextCourseId++;
@@ -5589,23 +5602,13 @@ var IpAcademy = class {
     return false;
   }
   registerStudent(username, bio, skills) {
-    const currentCaller = Principal.caller();
+    const currentCaller = msgCaller();
     const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
     if (existingUser) {
       return false;
+    } else {
+      return true;
     }
-    const newUser = {
-      id: currentCaller,
-      username,
-      bio,
-      skills,
-      enrolledCourses: [],
-      // Initially no enrolled courses
-      purchasedCourses: []
-      // Initially no purchased courses
-    };
-    this.users.push(newUser);
-    return true;
   }
 };
 _init = __decoratorStart(null);

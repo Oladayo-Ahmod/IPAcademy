@@ -4,8 +4,9 @@ import {
     update,
     call,
     Principal,
+    msgCaller,
 } from "azle";
-import { ic } from "azle/experimental";
+// import { ic } from "azle/experimental";
 //   import { Ledger, binaryAddressFromPrincipal, hexAddressFromPrincipal } from "azle/canisters/ledger";
 import { v4 as uuidv4 } from "uuid";
 
@@ -152,9 +153,9 @@ export default class IpAcademy {
 
   // Get a course by its ID
   @query([IDL.Nat], IDL.Opt(Course))
-  getCourseById(courseId: number): [] | [Course] {
+  getCourseById(courseId: number):Course | null {
     const course = this.courses.find((c) => c.id === courseId);
-    return course ? [course] : []; // Return as an optional value
+    return course ?? null; // Return as an optional value
   }
 
     /**
@@ -227,10 +228,13 @@ export default class IpAcademy {
     // register student
    @update([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], IDL.Bool)
    registerStudent(username: string, bio: string, skills: string[]): boolean {
-     const currentCaller = Principal.caller(); // Get the caller's principal
+     const currentCaller = msgCaller(); // Get the caller's principal
      const existingUser = this.users.find((u) => u.id.toText() === currentCaller.toText());
      if (existingUser) {
        return false; // User already registered
+     }
+     else{
+      return true
      }
  
      const newUser: User = {
