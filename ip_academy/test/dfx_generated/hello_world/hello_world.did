@@ -1,8 +1,10 @@
 service: () -> {
-    completeCourse: (nat, principal) -> (bool);
-    createCourse: (text, text, principal, nat64, text, vec text, nat64) -> (nat);
-    enrollStudent: (nat, principal) -> (bool);
-    getCourseById: (nat) -> (opt record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:opt principal; description:text; skillLevel:text; price:nat64}) query;
-    getCourses: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:opt principal; description:text; skillLevel:text; price:nat64}) query;
+    completeCourse: (nat) -> (bool);
+    createCourse: (text, text, nat64, text, vec text, nat64) -> (nat);
+    enrollStudent: (nat) -> (bool);
+    getCourseById: (nat) -> (opt record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
+    getCourses: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
+    getCoursesCreatedByUser: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
+    getCoursesEnrolledByUser: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
     registerStudent: (text, text, vec text) -> (bool);
 }
