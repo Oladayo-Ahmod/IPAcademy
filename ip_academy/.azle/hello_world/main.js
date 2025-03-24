@@ -5591,6 +5591,10 @@ var IpAcademy = class {
   completeCourse(courseId) {
     const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller();
+    const isRegistered = this.users.find((c) => c.id.toText() === student.toText());
+    if (!isRegistered) {
+      return "you are not a registered student";
+    }
     if (!course) {
       return "course not found";
     }
