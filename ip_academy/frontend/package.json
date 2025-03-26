@@ -10,17 +10,21 @@
   },
   "dependencies": {
     "@dfinity/agent": "^2.3.0",
+    "@dfinity/auth-client": "^2.4.0",
     "@dfinity/candid": "^2.3.0",
     "next": "15.2.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.17",
     "typescript": "^5"
   }
 }

@@ -10,10 +10,12 @@ export { idlFactory } from "./hello_world.did.js";
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  process.env.CANISTER_ID_HELLO_WORLD;
+  process.env.NEXT_PUBLIC_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
-  const agent = options.agent || new HttpAgent({ ...options.agentOptions });
+  const agent = options.agent || new HttpAgent({ ...options.agentOptions,
+    host :process.env.NEXT_PUBLIC_IC_HOST
+  });
 
   if (options.agent && options.agentOptions) {
     console.warn(
@@ -22,7 +24,7 @@ export const createActor = (canisterId, options = {}) => {
   }
 
   // Fetch root key for certificate validation during development
-  if (process.env.DFX_NETWORK !== "ic") {
+  if (process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
     agent.fetchRootKey().catch((err) => {
       console.warn(
         "Unable to fetch root key. Check to ensure that your local replica is running"
