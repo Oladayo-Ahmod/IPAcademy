@@ -11,7 +11,7 @@ import RoleSelection from './components/RoleSelection';
 
 
 export default function Home() {
-  const { identity, isAuthenticated, login, isRegistered, userRole,checkRegistration } = useAuth();
+  const { identity, isAuthenticated, login, isRegistered, userRole, checkRegistration } = useAuth();
   const [courses, setCourses] = useState<any[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -36,25 +36,25 @@ export default function Home() {
     }
   };
 
-   // Check registration status and fetch courses
-   useEffect(() => {
+  // Check registration status and fetch courses
+  useEffect(() => {
     const initialize = async () => {
       if (!isAuthenticated) return;
-      
+
       try {
         // First check registration status and role
         await checkRegistration();
         setInitialCheckDone(true);
-        
+
         // Then fetch appropriate courses
         const actor = createActor(canisterId, {
           agentOptions: { identity }
         });
-        
-        const result = activeTab === 'all' 
+
+        const result = activeTab === 'all'
           ? await actor.getCourses()
           : await actor.getCoursesEnrolledByUser();
-        
+
         setCourses(result);
       } catch (error) {
         console.error("Initialization error:", error);
@@ -90,8 +90,8 @@ export default function Home() {
     fetchCourses();
   };
 
-   // Handle refresh scenario
-   if (isAuthenticated && !initialCheckDone) {
+  // Handle refresh scenario
+  if (isAuthenticated && !initialCheckDone) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
@@ -121,6 +121,7 @@ export default function Home() {
   }
 
   if (!isRegistered) {
+    console.log(userRole, 'fore')
     // New user - show role selection
     if (userRole === null) {
       return (
@@ -162,8 +163,8 @@ export default function Home() {
             >
               My Courses
             </button>
-             {/* Only show create button for instructors */}
-             {userRole === 'instructor' && (
+            {/* Only show create button for instructors */}
+            {userRole === 'instructor' && (
               <button
                 onClick={() => setShowCreateForm(true)}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
@@ -192,13 +193,28 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <CourseCard
-                key={Number(course.id)}
-                course={course}
-                onEnroll={activeTab === 'all' ? handleEnroll : undefined}
-              />
-            ))}
+            {courses.map((course) => {
+              const isEnrolled = identity
+                ? course.students.some(student =>
+                  student.toString() === identity.getPrincipal().toString()
+                )
+                : false;
+
+              return (
+                <CourseCard
+                  key={Number(course.id)}
+                  course={course}
+                  isEnrolled={isEnrolled}
+                  onEnroll={
+                    userRole === 'student' &&
+                      activeTab === 'all' &&
+                      !isEnrolled
+                      ? handleEnroll
+                      : undefined
+                  }
+                />
+              );
+            })}
           </div>
         )}
       </main>

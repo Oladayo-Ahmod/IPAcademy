@@ -6,5 +6,6 @@ service: () -> {
     getCourses: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
     getCoursesCreatedByUser: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
     getCoursesEnrolledByUser: () -> (vec record {id:nat; title:text; duration:nat64; students:vec principal; prerequisites:vec text; instructor:principal; description:text; skillLevel:text; price:nat64}) query;
+    getCurrentStudent: () -> (opt record {id:principal; bio:text; username:text; purchasedCourses:vec text; skills:vec text; enrolledCourses:vec principal}) query;
     registerStudent: (text, text, vec text) -> (bool);
 }

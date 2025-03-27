@@ -1,6 +1,6 @@
 "use client";
-
 import { Principal } from '@dfinity/principal';
+import { useAuth } from "../contexts/AuthContext";
 
 interface Course {
   id: bigint;
@@ -14,17 +14,22 @@ interface Course {
   price: bigint;
 }
 
+interface CourseCardProps {
+  course: Course;
+  onEnroll?: (courseId: bigint) => void;
+  isInstructor?: boolean;
+  isEnrolled: boolean; // 
+}
+
 export default function CourseCard({ 
   course,
   onEnroll,
-  onComplete,
-  isInstructor
-}: {
-  course: Course;
-  onEnroll?: (courseId: bigint) => void;
-  onComplete?: (courseId: bigint) => void;
-  isInstructor?: boolean;
-}) {
+  isInstructor = false,
+  isEnrolled
+}:  CourseCardProps){
+  const { identity } = useAuth();
+
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="p-6">
@@ -44,26 +49,27 @@ export default function CourseCard({
         </div>
 
         <div className="flex justify-between items-center">
-          {!isInstructor && onEnroll && (
-            <button
-              onClick={() => onEnroll(course.id)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
-            >
-              Enroll
-            </button>
-          )}
-
-          {isInstructor && onComplete && (
-            <button
-              onClick={() => onComplete(course.id)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
-            >
-              Complete
-            </button>
+          {!isInstructor && (
+            <div>
+              {isEnrolled ? (
+                <span className="bg-gray-100 text-gray-800 px-4 py-2 rounded-md">
+                  Enrolled ✅
+                </span>
+              ) : (
+                onEnroll && (
+                  <button
+                    onClick={() => onEnroll(course.id)}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
+                  >
+                    Enroll
+                  </button>
+                )
+              )}
+            </div>
           )}
 
           <span className="text-sm text-gray-500">
-            {course.students.length} students
+            {course.students.length} student{course.students.length !== 1 ? 's' : ''}
           </span>
         </div>
       </div>

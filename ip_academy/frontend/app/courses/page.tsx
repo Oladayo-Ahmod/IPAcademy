@@ -70,15 +70,23 @@ export default function CoursesPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Available Courses</h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <CourseCard 
-              key={Number(course.id)} 
-              course={course} 
-              onEnroll={handleEnroll}
-            />
-          ))}
+          {courses.map((course) => {
+            const isEnrolled = identity
+              ? course.students.some(student =>
+                student.toString() === identity.getPrincipal().toString()
+              )
+              : false;
+
+            return (
+              <CourseCard
+                key={Number(course.id)}
+                course={course}
+                isEnrolled={isEnrolled}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

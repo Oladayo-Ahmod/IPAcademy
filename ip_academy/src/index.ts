@@ -116,9 +116,9 @@ export default class IpAcademy {
   enrollStudent(courseId: number): string | boolean {
     const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller(); // Get the caller's principal
-    const isRegistered = this.users.find((c)=> c.id.toText() === student.toText() )
-    
-    if(!isRegistered){
+    const isRegistered = this.users.find((c) => c.id.toText() === student.toText())
+
+    if (!isRegistered) {
       return 'you are not a registered student'
     }
 
@@ -127,9 +127,9 @@ export default class IpAcademy {
     }
 
     // Ensure the instructor cannot enroll in their own course
-    if (course.instructor.toText() === student.toText()) {
-      return 'instructor cannot enroll in their own course'; // Instructor cannot enroll in their own course
-    }
+    // if (course.instructor.toText() === student.toText()) {
+    //   return 'instructor cannot enroll in their own course'; // Instructor cannot enroll in their own course
+    // }
 
     // Check if the student is already enrolled
     if (course.students.includes(student)) {
@@ -147,12 +147,12 @@ export default class IpAcademy {
    * @returns {boolean} - True if the course was marked as completed, false otherwise.
    */
   @update([IDL.Nat], IDL.Bool)
-  completeCourse(courseId: number): boolean | string{
+  completeCourse(courseId: number): boolean | string {
     const course = this.courses.find((c) => c.id.toString() === courseId.toString());
     const student = msgCaller(); // Get the caller's principal
-    const isRegistered = this.users.find((c)=> c.id.toText() === student.toText() )
-    
-    if(!isRegistered){
+    const isRegistered = this.users.find((c) => c.id.toText() === student.toText())
+
+    if (!isRegistered) {
       return 'you are not a registered student'
     }
 
@@ -208,6 +208,14 @@ export default class IpAcademy {
     return this.courses.filter((course) => course.instructor.toText() === instructor.toText());
   }
 
+  //getCurrentStudent function
+  @query([], IDL.Opt(User))
+  getCurrentStudent(): [User] |[] {
+    const _caller = msgCaller()
+    const student = this.users.find((caller) => caller.id.toText() === _caller.toText())
+    return student ? [student] : [];
+  }
+
   /**
    * Retrieves courses enrolled by a specific user (student).
    * @param {Principal} student - The Principal of the student.
@@ -215,7 +223,9 @@ export default class IpAcademy {
    */
   @query([], IDL.Vec(Course))
   getCoursesEnrolledByUser(): Course[] {
-    const student = msgCaller()
-    return this.courses.filter((course) => course.students.includes(student));
+    const student = msgCaller();
+    return this.courses.filter((course) =>
+      course.students.some((s) => s.toText() === student.toText())
+    );
   }
 }

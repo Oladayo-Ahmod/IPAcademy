@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       //  check student registration
       const enrolledCourses = await actor.getCoursesEnrolledByUser();
+      console.log('enrolled',identity)
       if (enrolledCourses.length > 0) {
         setUserRole('student');
         setIsRegistered(true);
@@ -57,8 +58,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       
       // If neither, clear status
-      setUserRole(null);
-      setIsRegistered(false);
+      // setUserRole(null);
+      // setIsRegistered(false);
     } catch (error) {
       console.error("Registration check failed:", error);
       setUserRole(null);

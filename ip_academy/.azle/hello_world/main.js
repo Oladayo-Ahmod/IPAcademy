@@ -5535,8 +5535,8 @@ var User = idl_exports.Record({
   enrolledCourses: idl_exports.Vec(idl_exports.Principal),
   purchasedCourses: idl_exports.Vec(idl_exports.Text)
 });
-var _getCoursesEnrolledByUser_dec, _getCoursesCreatedByUser_dec, _registerStudent_dec, _completeCourse_dec, _enrollStudent_dec, _createCourse_dec, _getCourseById_dec, _getCourses_dec, _init;
-_getCourses_dec = [query([], idl_exports.Vec(Course))], _getCourseById_dec = [query([idl_exports.Nat], idl_exports.Opt(Course))], _createCourse_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Nat64, idl_exports.Text, idl_exports.Vec(idl_exports.Text), idl_exports.Nat64], idl_exports.Nat)], _enrollStudent_dec = [update([idl_exports.Nat], idl_exports.Bool)], _completeCourse_dec = [update([idl_exports.Nat], idl_exports.Bool)], _registerStudent_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Vec(idl_exports.Text)], idl_exports.Bool)], _getCoursesCreatedByUser_dec = [query([], idl_exports.Vec(Course))], _getCoursesEnrolledByUser_dec = [query([], idl_exports.Vec(Course))];
+var _getCoursesEnrolledByUser_dec, _getCurrentStudent_dec, _getCoursesCreatedByUser_dec, _registerStudent_dec, _completeCourse_dec, _enrollStudent_dec, _createCourse_dec, _getCourseById_dec, _getCourses_dec, _init;
+_getCourses_dec = [query([], idl_exports.Vec(Course))], _getCourseById_dec = [query([idl_exports.Nat], idl_exports.Opt(Course))], _createCourse_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Nat64, idl_exports.Text, idl_exports.Vec(idl_exports.Text), idl_exports.Nat64], idl_exports.Nat)], _enrollStudent_dec = [update([idl_exports.Nat], idl_exports.Bool)], _completeCourse_dec = [update([idl_exports.Nat], idl_exports.Bool)], _registerStudent_dec = [update([idl_exports.Text, idl_exports.Text, idl_exports.Vec(idl_exports.Text)], idl_exports.Bool)], _getCoursesCreatedByUser_dec = [query([], idl_exports.Vec(Course))], _getCurrentStudent_dec = [query([], idl_exports.Opt(User))], _getCoursesEnrolledByUser_dec = [query([], idl_exports.Vec(Course))];
 var IpAcademy = class {
   constructor() {
     __runInitializers(_init, 5, this);
@@ -5578,9 +5578,6 @@ var IpAcademy = class {
     }
     if (!course) {
       return "course not found";
-    }
-    if (course.instructor.toText() === student.toText()) {
-      return "instructor cannot enroll in their own course";
     }
     if (course.students.includes(student)) {
       return "Student already enrolled";
@@ -5628,9 +5625,16 @@ var IpAcademy = class {
     const instructor = msgCaller();
     return this.courses.filter((course) => course.instructor.toText() === instructor.toText());
   }
+  getCurrentStudent() {
+    const _caller = msgCaller();
+    const student = this.users.find((caller) => caller.id.toText() === _caller.toText());
+    return student ? [student] : [];
+  }
   getCoursesEnrolledByUser() {
     const student = msgCaller();
-    return this.courses.filter((course) => course.students.includes(student));
+    return this.courses.filter(
+      (course) => course.students.some((s) => s.toText() === student.toText())
+    );
   }
 };
 _init = __decoratorStart(null);
@@ -5641,6 +5645,7 @@ __decorateElement(_init, 1, "enrollStudent", _enrollStudent_dec, IpAcademy);
 __decorateElement(_init, 1, "completeCourse", _completeCourse_dec, IpAcademy);
 __decorateElement(_init, 1, "registerStudent", _registerStudent_dec, IpAcademy);
 __decorateElement(_init, 1, "getCoursesCreatedByUser", _getCoursesCreatedByUser_dec, IpAcademy);
+__decorateElement(_init, 1, "getCurrentStudent", _getCurrentStudent_dec, IpAcademy);
 __decorateElement(_init, 1, "getCoursesEnrolledByUser", _getCoursesEnrolledByUser_dec, IpAcademy);
 __decoratorMetadata(_init, IpAcademy);
 

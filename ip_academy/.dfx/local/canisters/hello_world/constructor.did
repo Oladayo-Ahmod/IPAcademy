@@ -54,5 +54,15 @@ service : () -> {
         price : nat64;
       },
     ) query;
+  getCurrentStudent : () -> (
+      opt record {
+        id : principal;
+        bio : text;
+        username : text;
+        purchasedCourses : vec text;
+        skills : vec text;
+        enrolledCourses : vec principal;
+      },
+    ) query;
   registerStudent : (text, text, vec text) -> (bool);
 }
