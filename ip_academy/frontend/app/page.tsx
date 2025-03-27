@@ -42,6 +42,7 @@ export default function Home() {
       if (!isAuthenticated) return;
 
       try {
+        console.log(identity)
         // First check registration status and role
         await checkRegistration();
         setInitialCheckDone(true);
@@ -106,7 +107,7 @@ export default function Home() {
         <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
           <div className="text-center p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Welcome to ICP Courses
+              Welcome to IP Academy
             </h2>
             <button
               onClick={login}

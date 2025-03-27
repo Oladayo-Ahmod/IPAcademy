@@ -13,16 +13,16 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-indigo-600">
-              ICP Courses
+              IP Academy
             </Link>
             {isAuthenticated && (
               <div className="hidden md:ml-10 md:flex md:space-x-8">
                 <Link href="/courses" className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium">
                   Browse Courses
                 </Link>
-                <Link href="/my-courses" className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium">
+                {/* <Link href="/my-courses" className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium">
                   My Courses
-                </Link>
+                </Link> */}
               </div>
             )}
           </div>

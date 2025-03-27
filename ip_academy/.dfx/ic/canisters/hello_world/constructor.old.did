@@ -1,4 +1,4 @@
-service : () -> {
+service : {
   completeCourse : (nat) -> (bool);
   createCourse : (text, text, nat64, text, vec text, nat64) -> (nat);
   enrollStudent : (nat) -> (bool);
@@ -52,16 +52,6 @@ service : () -> {
         description : text;
         skillLevel : text;
         price : nat64;
-      },
-    ) query;
-  getCurrentStudent : () -> (
-      opt record {
-        id : principal;
-        bio : text;
-        username : text;
-        purchasedCourses : vec text;
-        skills : vec text;
-        enrolledCourses : vec principal;
       },
     ) query;
   registerStudent : (text, text, vec text) -> (bool);

@@ -43,15 +43,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Check instructor status 
       const createdCourses = await actor.getCoursesCreatedByUser();
       if (createdCourses.length > 0) {
+        // console.log('check',createdCourses)
         setUserRole('instructor');
         setIsRegistered(true);
         return;
       }
       
       //  check student registration
-      const enrolledCourses = await actor.getCoursesEnrolledByUser();
-      console.log('enrolled',identity)
-      if (enrolledCourses.length > 0) {
+      const getCurrentStudent = await actor.getCurrentStudent();
+      if (getCurrentStudent.length > 0) {
+      // console.log('enrolled',getCurrentStudent)
+
         setUserRole('student');
         setIsRegistered(true);
         return;

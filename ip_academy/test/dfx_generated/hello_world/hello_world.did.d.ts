@@ -73,6 +73,19 @@ export interface _SERVICE {
       }
     >
   >,
+  'getCurrentStudent' : ActorMethod<
+    [],
+    [] | [
+      {
+        'id' : Principal,
+        'bio' : string,
+        'username' : string,
+        'purchasedCourses' : Array<string>,
+        'skills' : Array<string>,
+        'enrolledCourses' : Array<Principal>,
+      }
+    ]
+  >,
   'registerStudent' : ActorMethod<[string, string, Array<string>], boolean>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

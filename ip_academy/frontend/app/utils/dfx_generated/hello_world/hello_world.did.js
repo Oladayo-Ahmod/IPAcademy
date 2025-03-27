@@ -83,6 +83,22 @@ export const idlFactory = ({ IDL }) => {
         ],
         ['query'],
       ),
+    'getCurrentStudent' : IDL.Func(
+        [],
+        [
+          IDL.Opt(
+            IDL.Record({
+              'id' : IDL.Principal,
+              'bio' : IDL.Text,
+              'username' : IDL.Text,
+              'purchasedCourses' : IDL.Vec(IDL.Text),
+              'skills' : IDL.Vec(IDL.Text),
+              'enrolledCourses' : IDL.Vec(IDL.Principal),
+            })
+          ),
+        ],
+        ['query'],
+      ),
     'registerStudent' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Vec(IDL.Text)],
         [IDL.Bool],

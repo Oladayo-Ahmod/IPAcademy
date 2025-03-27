@@ -29,9 +29,12 @@ export default function CourseCard({
 }:  CourseCardProps){
   const { identity } = useAuth();
 
+  // Check if current user is the course creator
+  const isCreator = identity?.getPrincipal().toString() === course.instructor.toString();
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+       
       <div className="p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-2">{course.title}</h3>
         <p className="text-gray-600 mb-4">{course.description}</p>
@@ -46,6 +49,12 @@ export default function CourseCard({
           <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
             ${Number(course.price)}
           </span>
+            {/* Creator badge */}
+          {isCreator && (
+          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+            Created by you
+          </span>
+          )}
         </div>
 
         <div className="flex justify-between items-center">

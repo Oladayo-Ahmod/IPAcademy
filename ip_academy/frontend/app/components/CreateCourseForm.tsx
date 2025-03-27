@@ -68,7 +68,7 @@ export default function CreateCourseForm({ onCreated }: { onCreated: () => void 
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               required
             />
           </div>
@@ -80,7 +80,7 @@ export default function CreateCourseForm({ onCreated }: { onCreated: () => void 
                 type="number"
                 value={formData.duration}
                 onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block text-black w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 required
               />
             </div>
@@ -91,7 +91,7 @@ export default function CreateCourseForm({ onCreated }: { onCreated: () => void 
                 type="number"
                 value={formData.price}
                 onChange={(e) => setFormData({...formData, price: e.target.value})}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full text-black rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 required
               />
             </div>
@@ -103,7 +103,7 @@ export default function CreateCourseForm({ onCreated }: { onCreated: () => void 
               type="text"
               value={formData.prerequisites}
               onChange={(e) => setFormData({...formData, prerequisites: e.target.value})}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full text-black rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             />
           </div>
 
@@ -112,7 +112,7 @@ export default function CreateCourseForm({ onCreated }: { onCreated: () => void 
             <select
               value={formData.skillLevel}
               onChange={(e) => setFormData({...formData, skillLevel: e.target.value})}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full text-black rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             >
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
